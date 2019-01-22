@@ -1,0 +1,36 @@
+mixin stdarticle(no, title)
+	.application-block
+		.row
+			.col-md-2.col-lg-1: .application-block__num=no
+			.col-md-10.col-lg-7
+				.application-block__title=title
+				p: block
+
+mixin teamrow(id, name, post, right, big)
+	- var img1="/images/"+id+"_bw.png";
+	- var img2="/images/"+id+".png";
+	- var width=big?460:360;
+	- var height=big?556:360;
+	- var tiClass=big ? ("has-deco " + right ? "right-deco" : "left-deco") : "";
+	.team-item(class=tiClass): .row
+		.col-md-6.col-lg-4.offset-lg-1(class=right ? "order-md-3" : "")
+			.team-item__visual
+				img(src=img1 width=width height=height alt!=name)
+				img(src=img2 width=width height=height alt!=name)
+		.col-md-6.col-lg-5.offset-lg-1.align-self-center
+			.team-item__name!=name
+			.team-item__post!=post
+			.team-item__text: block
+
+mixin teamrow_short(name, position,offset)
+	li.team-list__item.col-md-4.col-lg-3(class=offset ? "offset-lg-1" : "")
+		.team-list__name=name
+		.team-list__post=position
+
+mixin newsCol(name,url, date)
+	.col-md-6.col-lg-5.offset-lg-1.order-2.order-md-1: .news-item
+		.news-item__title
+			a(href=url)=name
+		.news-item__text
+			block
+		.news-item__date=date

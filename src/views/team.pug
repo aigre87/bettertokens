@@ -1,0 +1,85 @@
+include includes/mixins
+
+doctype html
+head
+	title BetterTokens - Team
+	include includes/head
+body
+	include includes/preloader
+	include includes/cookie-warning
+	#wrapper
+		include includes/head-menu
+		#main
+			.container
+				.page-title BetterTokens Team
+				section.team-section
+
+					+teamrow("aivanov", "Alexander Ivanov","Founder and Chair of Tokenization Standards Association",true,true)
+						p Alexander is CEO of Waves Platform and Vostok.
+						br
+						p One of the most prominent, respected and influential people in the blockchain space, Alexander has led his company and its community towards strong growth, international recognition, and financial rewards for the last two years.
+						br
+						p The Waves Platform is now a global public blockchain platform with a market cap of $1.7 billion as of 19 December 2017.
+					+teamrow("tolkachev","Artem Tolkachev","Co-founder and Board Member for Tokenization Standards Association",false,true)
+						p A well-known expert in the field of blockchain and cryptocurrencies, Artem has been involved with legal support for crypto-related projects since 2013.
+						br
+						p In 2016, Artem founded and headed Deloitte Blockchain Lab CIS. As part of that initiative, he led a range of innovative projects involving implementation of corporate blockchain solutions, tokenisation of real-world assets, ICO support and development of legislation on cryptocurrencies and blockchain.
+					+teamrow("gukasyan", "Georgiy Gukasyan", "Secretary of Tokenization Standards Association", true,true)
+						p For the last five years, Georgiy has provided consulting services to the financial services sector.
+						br
+						p Georgiy has hands-on knowledge of the fintech and crypto industries, having taken part in a number of global projects focused on ICO support, tokenisation of assets and structuring of crypto exchange operations.
+						br
+						p Georgiy worked at Deloitte CIS and holds a law degree from Madrid Complutense University in Spain.
+
+					.block-title Our advisors
+					+teamrow("florian", "Florian S. Jorg", "Partner and Co-Head of International Practice in Bratschi Ltd.", false)
+						p Dr. Florian S. Jorg, MJC, is a partner at the Zurich office of Bratschi Ltd., one of Switzerland&rsquo;s largest independent law firms.
+						br
+						p He graduated from the University of St. Gallen Law School and obtained a postgraduate degree from NYU Law. His areas of practice are corporate law, M&amp;A and banking law, including fintech.
+						br
+						p Florian advises Swiss companies and foreign clients seeking to do business in Switzerland and has assisted several fintech startups and ICO projects.
+						.team-item__contact
+							| T
+							a(href='tel:41582581000') +41 58 258 10 00
+							|  /
+							a(href='mailto:florian.joerg@bratschi.ch') florian.joerg@bratschi.ch
+					+teamrow("rolf","Rolf H. Weber","Of Counsel in Bratschi Ltd.",true)
+						p Prof. Dr. Rolf H. Weber is Of Counsel at the Zurich office of Bratschi Ltd., one of Switzerland&rsquo;s largest independent law firms.
+						br
+						p His main fields of research and practice are IT, Internet, international business, competition and international financial law.
+						br
+						p Rolf has been a visiting professor at various foreign universities and regularly speaks on internet-related, financial and legal issues. He is a member of the Swiss Blockchain Task Force and advises clients on fintech projects.
+						.team-item__contact
+							| T
+							a(href='#') +41 58 258 10 00
+							|  /
+							a(href='#') rolf.weber@bratschi.ch
+
+					.block-title Members
+					+teamrow("kawai","Ken Kawai","Partner of Anderson Mori &amp; Tomotsune",false)
+						p Ken has extensive experience advising financial institutions, fintech startups, investors and corporate clients on complex financial and regulatory matters with a special focus on fintech.
+						br
+						p He has advised fintech companies, financial institutions and international organisations on a range of issues, including cryptocurrencies, ICOs and blockchain.
+						br
+						p Ken is a legal advisor of the Japan Cryptocurrency Business Association.
+					+teamrow("li","Ricky Li","PhD, CFA, Co-Founder of Altonomy",true)
+						p Ricky Li is a veteran trader in the crypto and commodities markets.
+						br
+						p He co-founded Altonomy, a crypto trading, advisory and asset management firm that has partnered with ICO projects and crypto hedge funds.
+						br
+						p He holds CFA Charter and PhD in computer science from Rensseeaer Polytechnic Institute. Prior to trading crypto assets, Ricky managed the energy derivative product team for CME Group and published articles and insights about market fundamentals.
+
+					.team-list-wrap
+						.team-list-opener
+							a(data-hidden-text='View less' data-shown-text='View more' href='#') View more
+						ul.team-list.row
+							+teamrow_short("Nick Rogers","Partner, Ogier",true)
+							+teamrow_short("Bradley Kruger","Partner, Ogier")
+							+teamrow_short("Cory Macculloch","Associate, Ogier")
+							+teamrow_short("Piers Dryden","Partner, Ogier",true)
+							+teamrow_short("Yiseul Cho","FBG capital")
+							+teamrow_short("Jan Brzezek","Crypto Finance AG")
+							+teamrow_short("Nicolas Huber","Crypto Finance AG",true)
+							+teamrow_short("Nishimura Yokiko","Moneypartners")
+
+		include includes/footer

@@ -1,0 +1,45 @@
+include includes/mixins
+
+doctype html
+head
+	title BetterTokens - Standarts
+	include includes/head
+body.inner-page
+	include includes/preloader
+	include includes/cookie-warning
+	#wrapper
+		include includes/head-menu
+		#main
+			.container
+				section.main-section: .row: .col-md-6: .main-section__title.page-title Overall approach
+
+				+stdarticle(1, "Tokenisation as a blockchain funding tool").
+					Tokenisation should only be used as a funding tool for a specific blockchain-based solution
+					or product, with the token fulfilling specific functions.
+				+stdarticle(2,"Investor protection").
+					Token buyers should be able to understand the features and functionality of the tokens they
+					buy, as well as challenges and risks of development, benefits of using the issuer&rsquo;s network
+					and plans for allocation of raised funds by the project team.
+				+stdarticle(3,"Risk management").
+					In the process of tokenisation, operational risks, including cyber security risks, as well as
+					financial, reputational and regulatory risks should be properly addressed.
+				+stdarticle(4,"Record keeping").
+					Token issuers should ensure that information about all transactions and management decisions
+					is traceable, properly documented, archived and stored in accordance with applicable
+					legislation and business practices.
+				+stdarticle(5,"Ensuring healthy market practices").
+					Token issuers should take effective steps to prevent insider trading and market manipulation activities.
+				+stdarticle(6, "Due diligence").
+					Recommended due diligence procedures include ensuring a qualified and professional project
+					team with relevant competencies, the use of an open and transparent blockchain protocol,
+					committing to using well-known token standards and undertaking at least one independent
+					security audit and a thorough analysis of the code and potential bugs before launching a
+					tokenisation campaign.
+
+				.row: .col-md-10.offset-md-2.offset-lg-1: .download-block
+					.download-block__title Download
+					.download-block__item
+						a.download-pdf(target='_blank' href='/pdf/Tokenization%20Standards.pdf') Tokenization Standards
+					.download-block__item
+						a.download-pdf(target='_blank' href='/pdf/Code_of_Conduct.pdf') Code of Conduct
+		include includes/footer

@@ -1,0 +1,20 @@
+meta(charset='utf-8')
+link(rel='shortcut icon' href='favicon.ico' type='image/x-icon')
+link(rel='icon' href='favicon.ico' type='image/x-icon')
+meta(name='viewport' content='initial-scale=1, maximum-scale=1, target-densitydpi=device-dpi, width=device-width, user-scalable=no')
+link(rel='stylesheet' href='/fonts/icomoon.css' type='text/css')
+link(rel='stylesheet' href='/assets/site.css?id=1' type='text/css')
+script(type='text/javascript' src='/assets/site.js?id=1')
+script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDKr3GwltR5C0DqGxEia97haYi6M-XUiuU&language=en&region=en')
+script.
+	(function (w, d, s, l, i) {
+		w[l] = w[l] || [];
+		w[l].push(
+			{'gtm.start': new Date().getTime(), event: 'gtm.js'}
+		);
+		var f = d.getElementsByTagName(s)[0],
+			j = d.createElement(s), dl = l !== 'dataLayer' ? '&l=' + l : '';
+		j.async = true;
+		j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+		f.parentNode.insertBefore(j, f);
+	})(window, document, 'script', 'dataLayer', 'GTM-NRXBKWS');
