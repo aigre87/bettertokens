@@ -23,9 +23,7 @@
                             | For apply an application, you must login through Waves Keeper
                         button.btn.btn-block(type='button' @click="authorize()" v-if="hasWavesKeeper") Authorize via Waves Keeper
                         p(v-if="!hasWavesKeeper")
-                            | To continue, please install the browser extension&nbsp;
-                            a(href="#") WavesKeeper
-                            | &nbsp;and reload this page.
+                            <span v-html="noWavesKeeperText"></span>
 
                     form(method='post' action='/application-progress#apply' enctype='multipart/form-data' v-if="auth.authed")
                         .row
@@ -33,34 +31,41 @@
                                 .input-wrap
                                     label.control-label-block Email
                                     input.form-input.email(name='email' type='email' placeholder='email@sample.com' v-model='form.email' @blur="onBlur()" :disabled="form.applied")
+                                    span.error(v-if="$v.form.email.$invalid && formClicked.email || $v.form.email.$invalid && trySending") Please enter your full name
                                 .input-wrap
                                     label.control-label-block Link to the project&rsquo;s website
                                     input.form-input.website(name='link' type='text' placeholder='https://website.com/' v-model='form.link' @blur="onBlur()" :disabled="form.applied")
+                                    span.error(v-if="$v.form.link.$invalid && formClicked.link || $v.form.link.$invalid && trySending")
                                 .input-wrap
-                                    label.control-label-block Token ID on Waves Blockchain
+                                    label.control-label-block Token ID in Waves Blockchain
                                     input.form-input.required(name='tokenid' type='text' placeholder='84Y1Ub3Kp9uitTTgKGPhgZE6EC793XuC3muoJC8zsFi2' v-model='form.tokenId' @blur="onBlur()" :disabled="form.applied")
+                                    span.error(v-if="$v.form.tokenid.$invalid && formClicked.tokenid || $v.form.tokenid.$invalid && trySending") Please enter your full name
                                 .input-wrap
                                     label.control-label-block Basic description of the project
                                     textarea.form-input.required(name='description' maxlength='300' cols='30' rows='5' placeholder='Type the main idea of your project here (300 symbols)' v-model='form.description' @blur="onBlur()" :disabled="form.applied")
+                                    span.error(v-if="$v.form.description.$invalid && formClicked.description || $v.form.description.$invalid && trySending") Please enter your full name
                             .col-md-6
                                 .input-wrap
                                     label.control-label-block Project name
                                     input.form-input.required(name='projectname' type='text' placeholder='Name' v-model='form.projectname' @blur="onBlur()" :disabled="form.applied")
+                                    span.error(v-if="$v.form.projectname.$invalid && formClicked.projectname || $v.form.projectname.$invalid && trySending") Please enter your full name
                                 .input-wrap
                                     label.control-label-block Crypto wallet address
                                     input.form-input.required(name='address' type='text' placeholder='3PCAB4sHXgvtu5NPoen6EXR5yaNbvsEA8Fj' v-model='form.address' @blur="onBlur()" :disabled="form.applied")
+                                    span.error(v-if="$v.form.address.$invalid && formClicked.address || $v.form.address.$invalid && trySending") Please enter your full name
                                 .input-wrap
                                     label.control-label-block Requested ticker
                                     input.form-input.required(name='ticker' type='text' placeholder='TCKR' v-model='form.ticker' @blur="onBlur()" :disabled="form.applied")
+                                    span.error(v-if="$v.form.ticker.$invalid && formClicked.ticker || $v.form.ticker.$invalid && trySending") Please enter your full name
                                 .input-wrap.input-wrap--attach
                                     label.control-label-block Attach documents
                                     .file-upload-block
                                         vue-dropzone(ref="fUploader" id="dropzone" :options="dropzoneOptions" @vdropzone-removed-file="removeFile" @vdropzone-success="uploadSuccess"  multiple :disabled="form.applied")
-                                            .dropzone-custom-content
-                                                h3.dropzone-custom-title Drag and drop to upload content!
-                                                .subtitle ...or click to select a file from your computer
+                                            <!--.dropzone-custom-content-->
+                                                <!--h3.dropzone-custom-title Drag and drop to upload content!-->
+                                                <!--.subtitle ...or click to select a file from your computer-->
                         .row.justify-content-md-end
-                            .col-md-2
+                            //.col-md-2
                                 button.btn.btn-block(type='button' @click="clear()" v-if="!form.applied") CLEAR
                             .col-md-3
                                 button.btn.btn-block(type='button' @click="apply()" v-if="!form.applied") APPLY
@@ -81,130 +86,217 @@
 </template>
 
 <script>
-	import vue2Dropzone from 'vue2-dropzone';
+    import 'remodal/dist/remodal-default-theme.css';
+    import 'remodal/dist/remodal.min.js';
+    import vue2Dropzone from 'vue2-dropzone';
+    import Vuelidate from 'vuelidate';
 
-	export default {
-		name      : 'app',
-		formReady : false,
-		components: {
-			vueDropzone: vue2Dropzone
-		},
-		data      : () => ({
-			hasWavesKeeper : false,
-			authed         : false,
-			auth           : {},
-			dropzoneOptions: {
-				url           : '/apply/upload',
-				thumbnailWidth: 150,
-				maxFilesize   : 50,
-				addRemoveLinks: true,
-				duplicateCheck: true,
-				options       : {
-					createImageThumbnails: false,
-					paramName            : 'docs',
-					previewsContainer    : '.test.dropzone-previews'
-				}
-			},
-			form           : {},
-			currentTab     : {},
-			tabs           : [{
-				name   : 'Pre-application',
-				id     : 'pre',
-				width  : 276,
-				viewbox: '0 0 278 50',
-				active : false
-			}, {
-				name   : 'Apply',
-				id     : 'apply',
-				width  : 104,
-				viewbox: '0 0 278 50',
-				active : false
-			}, {
-				name   : 'Review',
-				id     : 'review',
-				width  : 130,
-				viewbox: '0 0 278 50',
-				active : false
-			}, {
-				name   : 'FAQ',
-				id     : 'faq',
-				width  : 74,
-				viewbox: '0 0 278 50',
-				active : false
-			}]
-		}),
-		async mounted() {
-			if (window.location.hash) {
-				app.tools.iterate(this.tabs, (tab) => {
-					if (`#${tab.id}` === window.location.hash.toLowerCase()) this.currentTab = tab;
-				});
-			}
+    export default {
+        name      : 'app',
+        formReady : false,
+        trySending: false,
+        components: {
+            vueDropzone: vue2Dropzone,
+            Vuelidate: Vuelidate
+        },
+        data      : () => ({
+            hasWavesKeeper : false,
+            authed         : false,
+            auth           : {},
+            dropzoneOptions: {
+                url           : '/apply/upload',
+                thumbnailWidth: 150,
+                maxFilesize   : 50,
+                acceptedFiles: "application/pdf, .docx",
+                dictDefaultMessage: '.pdf&nbsp;&nbsp;&nbsp;&nbsp;.docx',
+                addRemoveLinks: true,
+                duplicateCheck: true,
+                options       : {
+                    createImageThumbnails: false,
+                    paramName            : 'docs',
+                    previewsContainer    : '.test.dropzone-previews'
+                }
+            },
+            validations:{
+                form:{
+                    email:{
+                        required,
+                        email
+                    },
+                    projectname:{
+                        required,
+                        minValue: minValue(1)
+                    },
+                    link:{
+                        required,
+                        url
+                    },
+                    address:{
+                        required,
+                        minValue: minValue(5)
+                    },
+                    tokenid:{
+                        required,
+                        minValue: minValue(5)
+                    },
+                    description:{
 
-			await webApi.ready();
-			this.auth = await webApi.emit('auth status');
-			this.form = this.auth.authed ? await webApi.emit('form apply get') || {} : {};
-			tools.iterate(this.form.uploads, (upload) => {
-				this.$refs.fUploader.manuallyAddFile({
-					uid : upload.uid,
-					size: upload.size,
-					name: upload.fileName,
-					type: upload.mimeType
-				}, `/apply/docs/${upload.uid}`);
-			});
+                    },
+                    ticker:{
+                        required,
+                        minValue: minValue(1)
+                    }
+                }
+            },
+            formClicked :{
+                email: false,
+                projectname: false,
+                link: false,
+                address: false,
+                tokenid: false,
+                description: false,
+                ticker: false
+            },
+            form           : {},
+            currentTab     : {},
+            tabs           : [{
+                name   : 'Pre-application',
+                id     : 'pre',
+                width  : 276,
+                viewbox: '0 0 278 50',
+                active : false
+            }, {
+                name   : 'Apply',
+                id     : 'apply',
+                width  : 104,
+                viewbox: '0 0 278 50',
+                active : false
+            }, {
+                name   : 'Review',
+                id     : 'review',
+                width  : 130,
+                viewbox: '0 0 278 50',
+                active : false
+            }, {
+                name   : 'FAQ',
+                id     : 'faq',
+                width  : 74,
+                viewbox: '0 0 278 50',
+                active : false
+            }]
+        }),
+        async mounted() {
+            if (window.location.hash) {
+                app.tools.iterate(this.tabs, (tab) => {
+                    if (`#${tab.id}` === window.location.hash.toLowerCase()) this.currentTab = tab;
+                });
+            }
 
-			if (!this.currentTab.id) this.currentTab = this.tabs[0];
-			this.hasWavesKeeper = !!window.WavesKeeper;
-			this.currentTab.active = true;
-		},
-		methods   : {
-			async authorize() {
-				if (this.auth.authed) return;
-				try {
-					let signed = await WavesKeeper.auth({data: this.auth.token});
-					let res = await webApi.emit('auth do', signed);
-					if (!res) return;
-					this.auth = await webApi.emit('auth status');
-					this.form = this.auth.authed ? await webApi.emit('form apply get') || {} : {};
-				} catch (e) {}
-			},
-			tabClick(tab) {
-				app.tools.iterate(this.tabs, (t) => t.active = false);
-				tab.active = true;
-				this.currentTab = tab;
-				window.location.hash = `#${tab.id}`;
-			},
-			clear() {
-				this.form = {};
-				this.onBlur();
-			},
-			async onBlur() {
-				await webApi.emit('form apply update', this.form);
-			},
-			async removeFile(file, error, xhr) {
-				if (!file || !file.uid) return;
-				await webApi.emit('form apply upload remove', file.uid);
-			},
-			uploadSuccess(file, response) {
-				if (!response || !response.uid) return;
-				file.uid = response.uid;
-			},
-			async apply() {
-				await webApi.emit('form apply apply');
-				this.form.applied = true;
-			}
-		}
-	};
+            await webApi.ready();
+            this.auth = await webApi.emit('auth status');
+            this.form = this.auth.authed ? await webApi.emit('form apply get') || {} : {};
+            tools.iterate(this.form.uploads, (upload) => {
+                this.$refs.fUploader.manuallyAddFile({
+                    uid : upload.uid,
+                    size: upload.size,
+                    name: upload.fileName,
+                    type: upload.mimeType
+                }, `/apply/docs/${upload.uid}`);
+            });
+
+            if (!this.currentTab.id) this.currentTab = this.tabs[0];
+            this.hasWavesKeeper = !!window.WavesKeeper;
+            this.currentTab.active = true;
+        },
+        computed: {
+            noWavesKeeperText: function () {
+                if( typeof InstallTrigger !== 'undefined' ){//is firefox
+                    return `To continue, please
+                        <a href='https://addons.mozilla.org/ru/firefox/addon/waves-keeper/'>install the browser extension WavesKeep
+                        and reload this page.`;
+                }else if( navigator.userAgent.indexOf("Chrome") != -1 ){//is chrome
+                    return `To continue, please
+                        <a href='https://chrome.google.com/webstore/detail/waves-keeper/lpilbniiabackdjcionkobglmddfbcjo'>install the browser extension WavesKeep
+                        and reload this page.`;
+                }else{
+                    return `Waves Keeper is not available for your browser yet.
+                        Please, use <a target='_blank' href='https://www.google.com/chrome/'>Chrome</a>
+                        or <a target='_blank' href='https://www.mozilla.org/ru/firefox/'>Firefox</a>.`;
+                }
+            }
+        },
+        methods   : {
+            async authorize() {
+                if (this.auth.authed) return;
+                try {
+                    let signed = await WavesKeeper.auth({data: this.auth.token});
+                    let res = await webApi.emit('auth do', signed);
+                    if (!res) return;
+                    this.auth = await webApi.emit('auth status');
+                    this.form = this.auth.authed ? await webApi.emit('form apply get') || {} : {};
+                } catch (e) {
+                    console.log(e);
+                    if (e.message ==='Api rejected by user') {
+                        console.log(e);
+                        if( $('[data-remodal-id=remodalTmpText]').length == 0 ){
+                            $("body").append(`<div>
+                                            <div data-remodal-id='remodalTmpText'>Please go to extension and approve permision</div>
+                            </div>`);
+                        }
+                        $('[data-remodal-id=remodalTmpText]').remodal().open();
+                    }
+                }
+            },
+            tabClick(tab) {
+                app.tools.iterate(this.tabs, (t) => t.active = false);
+                tab.active = true;
+                this.currentTab = tab;
+                window.location.hash = `#${tab.id}`;
+            },
+            clear() {
+                this.form = {};
+                this.onBlur();
+            },
+            async onBlur() {
+                await webApi.emit('form apply update', this.form);
+            },
+            async removeFile(file, error, xhr) {
+                if (!file || !file.uid) return;
+                await webApi.emit('form apply upload remove', file.uid);
+            },
+            uploadSuccess(file, response) {
+                if (!response || !response.uid) return;
+                file.uid = response.uid;
+            },
+            async apply() {
+                this.trySending = true;
+                await webApi.emit('form apply apply');
+                this.form.applied = true;
+            }
+        }
+    };
 </script>
 
 <style scoped>
     .vue-dropzone {
-        border        : 1px solid #767676;
+        height: 235px;
+        border        : 1px dashed #777;
         border-radius : 8px;
+        background: transparent;
+        padding: 18px 20px;
     }
     .logout{
-	    color: #0055FF;
+        color: #0055FF;
     }
     .dz-preview {
         display : block !important;
+    }
+</style>
+<style>
+    .page-application .vue-dropzone .dz-message{
+        margin: 0;
+        font-size: 18px;
+        color: #c7c7c7;
+        text-align: left;
     }
 </style>

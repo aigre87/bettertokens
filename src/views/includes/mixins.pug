@@ -10,14 +10,14 @@ mixin teamrow(id, name, post, right, big)
 	- var img1="/images/"+id+"_bw.png";
 	- var img2="/images/"+id+".png";
 	- var width=big?460:360;
-	- var height=big?556:360;
+	//- var height=big?556:360;
 	- var tiClass=big ? ("has-deco " + right ? "right-deco" : "left-deco") : "";
-	.team-item(class=tiClass): .row
-		.col-md-6.col-lg-4.offset-lg-1(class=right ? "order-md-3" : "")
+	.team-item(class=tiClass)(class=big ? "big" : ""): .row
+		.col-md-6(class=big ? "col-lg-5" : "col-lg-4").offset-lg-1(class=right ? "order-md-3" : "")
 			.team-item__visual
-				img(src=img1 width=width height=height alt!=name)
-				img(src=img2 width=width height=height alt!=name)
-		.col-md-6.col-lg-5.offset-lg-1.align-self-center
+				img(src=img1 width=width alt!=name)
+				img(src=img2 width=width alt!=name)
+		.col-md-6(class=big ? "col-lg-4" : "col-lg-5").offset-lg-1.align-self-center.item-text
 			.team-item__name!=name
 			.team-item__post!=post
 			.team-item__text: block

@@ -13,7 +13,6 @@
 		"> 1%"
 	],
 	"dependencies": {
-		"remodal": "^1.1.1",
 		"@fancyapps/fancybox": "^3.5.6",
 		"@waves/signature-generator": "^1.1.9",
 		"body-parser": "^1.18.3",
@@ -36,6 +35,7 @@
 		"osmium-tools": "^0.1.12",
 		"osmium-webapi": "^0.2.21",
 		"pug": "^2.0.3",
+		"remodal": "^1.1.1",
 		"session-file-store": "^1.2.0",
 		"socket.io": "^2.2.0",
 		"socket.io-client": "latest",
