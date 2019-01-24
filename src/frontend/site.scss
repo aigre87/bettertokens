@@ -292,6 +292,7 @@ small {
 	position:    relative;
 	z-index:     2;
 	padding-top: 92px;
+	overflow: hidden;
 }
 
 @media only screen and (max-width: 991px) {
@@ -1950,6 +1951,12 @@ small {
 		color:   #C7C7C7;
 		opacity: 1;
 	}
+	&:-webkit-autofill,
+	&:-webkit-autofill:hover,
+	&:-webkit-autofill:focus,
+	&:-webkit-autofill:active  {
+		-webkit-box-shadow: 0 0 0 30px white inset !important;
+	}
 }
 
 @media only screen and (max-width: 767px) {
@@ -2898,6 +2905,7 @@ textarea.form-input {
 	font-size:   12px;
 	line-height: 20px;
 	z-index:     4;
+	position: relative;
 
 	a {
 		color: #fff;

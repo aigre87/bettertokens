@@ -21,42 +21,49 @@
                     .row: .col-md-10(v-if="!auth.authed")
                         p
                             | For apply an application, you must login through Waves Keeper
-                        button.btn.btn-block(type='button' @click="authorize()" v-if="hasWavesKeeper") Authorize via Waves Keeper
+                        button.btn.authorizeBtn(type='button' @click="authorize()" v-if="hasWavesKeeper") AUTHORIZE
                         p(v-if="!hasWavesKeeper")
                             <span v-html="noWavesKeeperText"></span>
 
                     form(method='post' action='/application-progress#apply' enctype='multipart/form-data' v-if="auth.authed")
                         .row
                             .col-md-6
-                                .input-wrap
+                                .input-wrap(:class="{ validateError : $v.form.email.$invalid && formClicked.email || $v.form.email.$invalid && trySending }")
                                     label.control-label-block Email
-                                    input.form-input.email(name='email' type='email' placeholder='email@sample.com' v-model='form.email' @blur="onBlur()" :disabled="form.applied")
-                                    span.error(v-if="$v.form.email.$invalid && formClicked.email || $v.form.email.$invalid && trySending") Please enter your full name
-                                .input-wrap
+                                    .input-wrap-w
+                                        input.form-input.email(name='email' type='email' placeholder='email@sample.com' v-model='form.email' @blur="function(){formClicked.email = true;onBlur();}()" :disabled="form.applied")
+                                        span.validateErrorText Please enter email
+                                .input-wrap(:class="{ validateError : $v.form.link.$invalid && formClicked.link || $v.form.link.$invalid && trySending }")
                                     label.control-label-block Link to the project&rsquo;s website
-                                    input.form-input.website(name='link' type='text' placeholder='https://website.com/' v-model='form.link' @blur="onBlur()" :disabled="form.applied")
-                                    span.error(v-if="$v.form.link.$invalid && formClicked.link || $v.form.link.$invalid && trySending")
-                                .input-wrap
+                                    .input-wrap-w
+                                        input.form-input.website(name='link' type='text' placeholder='https://website.com/' v-model='form.link' @blur="function(){formClicked.link = true;onBlur();}()" :disabled="form.applied")
+                                        span.validateErrorText Please enter link
+                                .input-wrap(:class="{ validateError : $v.form.tokenId.$invalid && formClicked.tokenId || $v.form.tokenId.$invalid && trySending }")
                                     label.control-label-block Token ID in Waves Blockchain
-                                    input.form-input.required(name='tokenid' type='text' placeholder='84Y1Ub3Kp9uitTTgKGPhgZE6EC793XuC3muoJC8zsFi2' v-model='form.tokenId' @blur="onBlur()" :disabled="form.applied")
-                                    span.error(v-if="$v.form.tokenid.$invalid && formClicked.tokenid || $v.form.tokenid.$invalid && trySending") Please enter your full name
-                                .input-wrap
+                                    .input-wrap-w
+                                        input.form-input.required(name='tokenid' type='text' placeholder='84Y1Ub3Kp9uitTTgKGPhgZE6EC793XuC3muoJC8zsFi2' v-model='form.tokenId' @blur="function(){formClicked.tokenId = true;onBlur();}()" :disabled="form.applied")
+                                        span.validateErrorText Please enter Token ID
+                                .input-wrap(:class="{ validateError : $v.form.description.$invalid && formClicked.description || $v.form.description.$invalid && trySending }")
                                     label.control-label-block Basic description of the project
-                                    textarea.form-input.required(name='description' maxlength='300' cols='30' rows='5' placeholder='Type the main idea of your project here (300 symbols)' v-model='form.description' @blur="onBlur()" :disabled="form.applied")
-                                    span.error(v-if="$v.form.description.$invalid && formClicked.description || $v.form.description.$invalid && trySending") Please enter your full name
+                                    .input-wrap-w
+                                        textarea.form-input.required(name='description' maxlength='300' cols='30' rows='5' placeholder='Type the main idea of your project here (300 symbols)' v-model='form.description' @blur="function(){formClicked.description = true;onBlur();}()" :disabled="form.applied")
+                                        span.validateErrorText Please enter description
                             .col-md-6
-                                .input-wrap
+                                .input-wrap(:class="{ validateError : $v.form.projectname.$invalid && formClicked.projectname || $v.form.projectname.$invalid && trySending }")
                                     label.control-label-block Project name
-                                    input.form-input.required(name='projectname' type='text' placeholder='Name' v-model='form.projectname' @blur="onBlur()" :disabled="form.applied")
-                                    span.error(v-if="$v.form.projectname.$invalid && formClicked.projectname || $v.form.projectname.$invalid && trySending") Please enter your full name
-                                .input-wrap
+                                    .input-wrap-w
+                                        input.form-input.required(name='projectname' type='text' placeholder='Name' v-model='form.projectname' @blur="function(){formClicked.projectname = true;onBlur();}()" :disabled="form.applied")
+                                        span.validateErrorText Please enter project name
+                                .input-wrap(:class="{ validateError : $v.form.address.$invalid && formClicked.address || $v.form.address.$invalid && trySending }")
                                     label.control-label-block Crypto wallet address
-                                    input.form-input.required(name='address' type='text' placeholder='3PCAB4sHXgvtu5NPoen6EXR5yaNbvsEA8Fj' v-model='form.address' @blur="onBlur()" :disabled="form.applied")
-                                    span.error(v-if="$v.form.address.$invalid && formClicked.address || $v.form.address.$invalid && trySending") Please enter your full name
-                                .input-wrap
+                                    .input-wrap-w
+                                        input.form-input.required(name='address' type='text' placeholder='3PCAB4sHXgvtu5NPoen6EXR5yaNbvsEA8Fj' v-model='form.address' @blur="function(){formClicked.address = true;onBlur();}()" :disabled="form.applied")
+                                        span.validateErrorText Please enter address
+                                .input-wrap(:class="{ validateError : $v.form.ticker.$invalid && formClicked.ticker || $v.form.ticker.$invalid && trySending }")
                                     label.control-label-block Requested ticker
-                                    input.form-input.required(name='ticker' type='text' placeholder='TCKR' v-model='form.ticker' @blur="onBlur()" :disabled="form.applied")
-                                    span.error(v-if="$v.form.ticker.$invalid && formClicked.ticker || $v.form.ticker.$invalid && trySending") Please enter your full name
+                                    .input-wrap-w
+                                        input.form-input.required(name='ticker' type='text' placeholder='TCKR' v-model='form.ticker' @blur="function(){formClicked.ticker = true;onBlur();}()" :disabled="form.applied")
+                                        span.validateErrorText Please enter ticker
                                 .input-wrap.input-wrap--attach
                                     label.control-label-block Attach documents
                                     .file-upload-block
@@ -90,17 +97,50 @@
     import 'remodal/dist/remodal.min.js';
     import vue2Dropzone from 'vue2-dropzone';
     import Vuelidate from 'vuelidate';
+    import { required, minLength, minValue, url, email } from 'vuelidate/lib/validators';
 
     export default {
         name      : 'app',
         formReady : false,
-        trySending: false,
         components: {
             vueDropzone: vue2Dropzone,
             Vuelidate: Vuelidate
         },
+        validations:{
+            form:{
+                email:{
+                    required,
+                    email
+                },
+                projectname:{
+                    required,
+                    minLength: minLength(1)
+                },
+                link:{
+                    required,
+                    url
+                },
+                address:{
+                    required,
+                    minLength: minLength(1)
+                },
+                tokenId:{
+                    required,
+                    minLength: minLength(1)
+                },
+                description:{
+                    required,
+                    minLength: minLength(1)
+                },
+                ticker:{
+                    required,
+                    minLength: minLength(1)
+                }
+            }
+        },
         data      : () => ({
             hasWavesKeeper : false,
+            trySending     : false,
             authed         : false,
             auth           : {},
             dropzoneOptions: {
@@ -117,47 +157,26 @@
                     previewsContainer    : '.test.dropzone-previews'
                 }
             },
-            validations:{
-                form:{
-                    email:{
-                        required,
-                        email
-                    },
-                    projectname:{
-                        required,
-                        minValue: minValue(1)
-                    },
-                    link:{
-                        required,
-                        url
-                    },
-                    address:{
-                        required,
-                        minValue: minValue(5)
-                    },
-                    tokenid:{
-                        required,
-                        minValue: minValue(5)
-                    },
-                    description:{
-
-                    },
-                    ticker:{
-                        required,
-                        minValue: minValue(1)
-                    }
-                }
-            },
             formClicked :{
-                email: false,
-                projectname: false,
-                link: false,
-                address: false,
-                tokenid: false,
-                description: false,
-                ticker: false
+                email       : false,
+                projectname : false,
+                link        : false,
+                address     : false,
+                tokenId     : false,
+                description : false,
+                ticker      : false
             },
-            form           : {},
+            form           : {
+                "email": "",
+                "link": null,
+                "tokenId": null,
+                "description": null,
+                "projectname": null,
+                "address": null,
+                "ticker": null,
+                "applied": null,
+                "uploads": []
+            },
             currentTab     : {},
             tabs           : [{
                 name   : 'Pre-application',
@@ -227,20 +246,31 @@
         },
         methods   : {
             async authorize() {
+                console.log("authorize");
                 if (this.auth.authed) return;
+
                 try {
+                    console.log(this.auth.token);
                     let signed = await WavesKeeper.auth({data: this.auth.token});
+                    console.log(signed);
                     let res = await webApi.emit('auth do', signed);
                     if (!res) return;
                     this.auth = await webApi.emit('auth status');
                     this.form = this.auth.authed ? await webApi.emit('form apply get') || {} : {};
                 } catch (e) {
                     console.log(e);
-                    if (e.message ==='Api rejected by user') {
-                        console.log(e);
+                    if( e.message === 'WavesKeeper contains co accounts' ){
                         if( $('[data-remodal-id=remodalTmpText]').length == 0 ){
                             $("body").append(`<div>
-                                            <div data-remodal-id='remodalTmpText'>Please go to extension and approve permision</div>
+                                            <div data-remodal-id='remodalTmpText'>${e.message}.<br />Please go to extension and login</div>
+                            </div>`);
+                        }
+                        $('[data-remodal-id=remodalTmpText]').remodal().open();
+                    }
+                    if (e.message === 'Api rejected by user') {
+                        if( $('[data-remodal-id=remodalTmpText]').length == 0 ){
+                            $("body").append(`<div>
+                                            <div data-remodal-id='remodalTmpText'>${e.message}.<br />Please go to extension and approve permision</div>
                             </div>`);
                         }
                         $('[data-remodal-id=remodalTmpText]').remodal().open();
@@ -270,16 +300,29 @@
             },
             async apply() {
                 this.trySending = true;
-                await webApi.emit('form apply apply');
-                this.form.applied = true;
+                this.$v.form.$touch();
+                if (this.$v.$invalid) {
+
+                }else{
+                    console.log(0);
+                    await webApi.emit('form apply apply');
+                    console.log(1);
+                    this.form.applied = true;
+                    this.$forceUpdate();
+                }
             }
         }
     };
 </script>
 
 <style scoped>
+    .authorizeBtn{
+        padding-left: 70px;
+        padding-right: 70px;
+        letter-spacing: 2px;
+    }
     .vue-dropzone {
-        height: 235px;
+        min-height: 235px;
         border        : 1px dashed #777;
         border-radius : 8px;
         background: transparent;
@@ -292,11 +335,40 @@
         display : block !important;
     }
 </style>
-<style>
+
+<style lang="scss">
     .page-application .vue-dropzone .dz-message{
         margin: 0;
         font-size: 18px;
         color: #c7c7c7;
         text-align: left;
+    }
+    .page-application .input-wrap{
+        .input-wrap-w{
+            position: relative;
+        }
+        .validateErrorText{
+            color: #0055FF;
+            position: absolute;
+            left: 8px;
+            top: 0px;
+            padding: 0 5px;
+            font-size: 14px;
+            line-height: 16px;
+            background: #fff;
+            transform: translateY(-50%);
+            opacity: 0;
+        }
+        &.validateError{
+            .form-input {
+                border: 1px solid #0055FF;
+            }
+            .validateErrorText{
+                opacity: 1;
+            }
+        }
+    }
+    #main .dz-preview{
+        margin: 0;
     }
 </style>

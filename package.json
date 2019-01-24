@@ -33,7 +33,7 @@
 		"osmium-db": "^0.2.19",
 		"osmium-events": "latest",
 		"osmium-tools": "^0.1.12",
-		"osmium-webapi": "^0.2.21",
+		"osmium-webapi": "^0.2.25",
 		"pug": "^2.0.3",
 		"remodal": "^1.1.1",
 		"session-file-store": "^1.2.0",
