@@ -31,43 +31,52 @@
                                 .input-wrap(:class="{ validateError : $v.form.email.$invalid && formClicked.email || $v.form.email.$invalid && trySending }")
                                     label.control-label-block Email
                                     .input-wrap-w
-                                        input.form-input.email(name='email' type='email' placeholder='email@sample.com' v-model='form.email' @blur="function(){formClicked.email = true;onBlur();}()" :disabled="form.applied")
+                                        input.form-input.email(name='email' type='email' placeholder='email@sample.com' v-model='form.email' @blur="onBlur($event)" :disabled="form.applied")
                                         span.validateErrorText Please enter email
                                 .input-wrap(:class="{ validateError : $v.form.link.$invalid && formClicked.link || $v.form.link.$invalid && trySending }")
                                     label.control-label-block Link to the project&rsquo;s website
                                     .input-wrap-w
-                                        input.form-input.website(name='link' type='text' placeholder='https://website.com/' v-model='form.link' @blur="function(){formClicked.link = true;onBlur();}()" :disabled="form.applied")
+                                        input.form-input.website(name='link' type='text' placeholder='https://website.com/' v-model='form.link' @blur="onBlur($event)" :disabled="form.applied")
                                         span.validateErrorText Please enter link
                                 .input-wrap(:class="{ validateError : $v.form.tokenId.$invalid && formClicked.tokenId || $v.form.tokenId.$invalid && trySending }")
                                     label.control-label-block Token ID in Waves Blockchain
                                     .input-wrap-w
-                                        input.form-input.required(name='tokenid' type='text' placeholder='84Y1Ub3Kp9uitTTgKGPhgZE6EC793XuC3muoJC8zsFi2' v-model='form.tokenId' @blur="function(){formClicked.tokenId = true;onBlur();}()" :disabled="form.applied")
+                                        input.form-input.required(name='tokenId' type='text' placeholder='84Y1Ub3Kp9uitTTgKGPhgZE6EC793XuC3muoJC8zsFi2' v-model='form.tokenId' @blur="onBlur($event)" :disabled="form.applied")
                                         span.validateErrorText Please enter Token ID
                                 .input-wrap(:class="{ validateError : $v.form.description.$invalid && formClicked.description || $v.form.description.$invalid && trySending }")
                                     label.control-label-block Basic description of the project
                                     .input-wrap-w
-                                        textarea.form-input.required(name='description' maxlength='300' cols='30' rows='5' placeholder='Type the main idea of your project here (300 symbols)' v-model='form.description' @blur="function(){formClicked.description = true;onBlur();}()" :disabled="form.applied")
+                                        textarea.form-input.required(name='description' maxlength='300' cols='30' rows='5' placeholder='Type the main idea of your project here (300 symbols)' v-model='form.description' @blur="onBlur($event)" :disabled="form.applied")
                                         span.validateErrorText Please enter description
                             .col-md-6
                                 .input-wrap(:class="{ validateError : $v.form.projectname.$invalid && formClicked.projectname || $v.form.projectname.$invalid && trySending }")
                                     label.control-label-block Project name
                                     .input-wrap-w
-                                        input.form-input.required(name='projectname' type='text' placeholder='Name' v-model='form.projectname' @blur="function(){formClicked.projectname = true;onBlur();}()" :disabled="form.applied")
+                                        input.form-input.required(name='projectname' type='text' placeholder='Name' v-model='form.projectname' @blur="onBlur($event)" :disabled="form.applied")
                                         span.validateErrorText Please enter project name
                                 .input-wrap(:class="{ validateError : $v.form.address.$invalid && formClicked.address || $v.form.address.$invalid && trySending }")
                                     label.control-label-block Crypto wallet address
                                     .input-wrap-w
-                                        input.form-input.required(name='address' type='text' placeholder='3PCAB4sHXgvtu5NPoen6EXR5yaNbvsEA8Fj' v-model='form.address' @blur="function(){formClicked.address = true;onBlur();}()" :disabled="form.applied")
+                                        input.form-input.required(name='address' type='text' placeholder='3PCAB4sHXgvtu5NPoen6EXR5yaNbvsEA8Fj' v-model='form.address' @blur="onBlur($event)" :disabled="form.applied")
                                         span.validateErrorText Please enter address
                                 .input-wrap(:class="{ validateError : $v.form.ticker.$invalid && formClicked.ticker || $v.form.ticker.$invalid && trySending }")
                                     label.control-label-block Requested ticker
                                     .input-wrap-w
-                                        input.form-input.required(name='ticker' type='text' placeholder='TCKR' v-model='form.ticker' @blur="function(){formClicked.ticker = true;onBlur();}()" :disabled="form.applied")
+                                        input.form-input.required(name='ticker' type='text' placeholder='TCKR' v-model='form.ticker' @blur="onBlur($event)" :disabled="form.applied")
                                         span.validateErrorText Please enter ticker
                                 .input-wrap.input-wrap--attach
                                     label.control-label-block Attach documents
                                     .file-upload-block
-                                        vue-dropzone(ref="fUploader" id="dropzone" :options="dropzoneOptions" @vdropzone-removed-file="removeFile" @vdropzone-success="uploadSuccess"  multiple :disabled="form.applied")
+                                        vue-dropzone(
+                                            ref="fUploader"
+                                            id="dropzone"
+                                            :options="dropzoneOptions"
+                                            @vdropzone-removed-file="removeFile"
+                                            @vdropzone-success="uploadSuccess"
+                                            @vdropzone-file-added="fileAdded"
+                                            multiple
+                                            :disabled="form.applied"
+                                        )
                                             <!--.dropzone-custom-content-->
                                                 <!--h3.dropzone-custom-title Drag and drop to upload content!-->
                                                 <!--.subtitle ...or click to select a file from your computer-->
@@ -90,6 +99,7 @@
                 .row
                     .col-md-12
                         include ../../views/includes/faq.pug
+        div(data-remodal-id='remodalTmpText')
 </template>
 
 <script>
@@ -99,6 +109,23 @@
     import Vuelidate from 'vuelidate';
     import { required, minLength, minValue, url, email } from 'vuelidate/lib/validators';
 
+    const getDropzoneTemplate = () => `
+        <div class="dz-preview-new dz-file-preview">
+            <!--<div class="dz-image">
+                <div data-dz-thumbnail-bg></div>
+            </div>-->
+            <div class="dz-details">
+                <!--<div class="dz-size"><span data-dz-size></span></div>-->
+                <div class="dz-filename"><span class="dz-filename-span" data-dz-name></span></div>
+            </div>
+            <div class="dz-error-message"><span data-dz-errormessage></span></div>
+            <div class="statusRows">
+                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                <div class="dz-success-mark"><i class="fa fa-check"></i></div>
+                <div class="dz-error-mark"><i class="fa fa-close"></i></div>
+            </div>
+        </div>
+    `;
     export default {
         name      : 'app',
         formReady : false,
@@ -144,6 +171,7 @@
             authed         : false,
             auth           : {},
             dropzoneOptions: {
+                previewTemplate: getDropzoneTemplate(),
                 url           : '/apply/upload',
                 thumbnailWidth: 150,
                 maxFilesize   : 50,
@@ -246,33 +274,24 @@
         },
         methods   : {
             async authorize() {
-                console.log("authorize");
                 if (this.auth.authed) return;
 
                 try {
                     console.log(this.auth.token);
                     let signed = await WavesKeeper.auth({data: this.auth.token});
-                    console.log(signed);
                     let res = await webApi.emit('auth do', signed);
                     if (!res) return;
                     this.auth = await webApi.emit('auth status');
                     this.form = this.auth.authed ? await webApi.emit('form apply get') || {} : {};
                 } catch (e) {
                     console.log(e);
+                    let $remodalEl = $('[data-remodal-id=remodalTmpText]');
                     if( e.message === 'WavesKeeper contains co accounts' ){
-                        if( $('[data-remodal-id=remodalTmpText]').length == 0 ){
-                            $("body").append(`<div>
-                                            <div data-remodal-id='remodalTmpText'>${e.message}.<br />Please go to extension and login</div>
-                            </div>`);
-                        }
+                        $remodalEl.textContent=`${e.message}.<br />Please go to extension and login`;
                         $('[data-remodal-id=remodalTmpText]').remodal().open();
                     }
                     if (e.message === 'Api rejected by user') {
-                        if( $('[data-remodal-id=remodalTmpText]').length == 0 ){
-                            $("body").append(`<div>
-                                            <div data-remodal-id='remodalTmpText'>${e.message}.<br />Please go to extension and approve permision</div>
-                            </div>`);
-                        }
+                        $remodalEl.textContent=`${e.message}.<br />${e.message}.<br />Please go to extension and approve permision`;
                         $('[data-remodal-id=remodalTmpText]').remodal().open();
                     }
                 }
@@ -287,7 +306,9 @@
                 this.form = {};
                 this.onBlur();
             },
-            async onBlur() {
+            async onBlur(e) {
+                this.formClicked[e.currentTarget.getAttribute('name')] = true;
+                e.currentTarget.getAttribute('name')
                 await webApi.emit('form apply update', this.form);
             },
             async removeFile(file, error, xhr) {
@@ -298,15 +319,16 @@
                 if (!response || !response.uid) return;
                 file.uid = response.uid;
             },
+            fileAdded(file){
+                file.previewTemplate.querySelector(".dz-filename-span").setAttribute('data-name', file.name);
+            },
             async apply() {
                 this.trySending = true;
                 this.$v.form.$touch();
                 if (this.$v.$invalid) {
 
                 }else{
-                    console.log(0);
                     await webApi.emit('form apply apply');
-                    console.log(1);
                     this.form.applied = true;
                     this.$forceUpdate();
                 }
@@ -348,27 +370,222 @@
             position: relative;
         }
         .validateErrorText{
-            color: #0055FF;
+            color: #D8000C;
             position: absolute;
             left: 8px;
-            top: 0px;
+            bottom: 1px;
             padding: 0 5px;
             font-size: 14px;
             line-height: 16px;
             background: #fff;
-            transform: translateY(-50%);
+            transform: translateY(50%);
             opacity: 0;
         }
         &.validateError{
             .form-input {
-                border: 1px solid #0055FF;
+                border: 1px solid #D8000C;
             }
             .validateErrorText{
                 opacity: 1;
             }
         }
     }
-    #main .dz-preview{
-        margin: 0;
+    .page-application{
+        #dropzone{
+            display: flex;
+            align-items: flex-start;
+            align-content: flex-start;
+            flex-wrap: wrap;
+        }
+        .dz-preview-new {
+            position: relative;
+            flex: 0 1 calc(50% - 14px);
+            padding-left: 23px;
+            padding-right: 21px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            min-height: 21px;
+            &:nth-child(even){
+                margin-right: 28px;
+            }
+            .dz-details {
+
+                .dz-size {
+
+                    span {
+
+                    }
+                }
+
+                .dz-filename {
+                    transition: all 0.15s ease;
+                    opacity: 0.5;
+                    font-size: 11px;
+                    line-height: 13px;
+                    span {
+                        &[data-name$=".doc"],
+                        &[data-name$=".docx"],
+                        &[data-name$=".pdf"]{
+                            &:before{
+                                transition: all 0.15s ease;
+                                opacity: 0.5;
+                                content: '';
+                                width: 18px;
+                                height: 21px;
+                                position: absolute;
+                                left: 0;
+                                top: 0;
+                                -webkit-background-size: cover;
+                                background-size: cover;
+                            }
+                        }
+                        &[data-name$=".doc"],
+                        &[data-name$=".docx"]{
+                            &:before{
+                                background: transparent url("/images/file-docx.svg") no-repeat;
+                            }
+                        }
+                        &[data-name$=".pdf"]{
+                            &:before{
+                                background: transparent url("/images/file-pdf.svg") no-repeat;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .statusRows{
+                margin-top: 2px;
+                width: 100%;
+                height: 2px;
+                border-radius: 1px;
+                overflow: hidden;
+                position: relative;
+            }
+            .dz-error-message {
+
+                span {
+
+                }
+            }
+
+            .dz-success-mark {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                transition: opacity 0.15s ease;
+                opacity: 0;
+                display: block;
+                width: 100%;
+                height: 100%;
+                background: #28a745;
+                .fa {
+                    display: none;
+                }
+            }
+
+            .dz-error-mark {
+
+                .fa {
+                    display: none;
+                }
+            }
+
+            .dz-progress {
+                position: relative;
+                opacity: 1;
+                width: 100%;
+                height: 100%;
+                background: #EAEAEA;
+                border-radius: 1px;
+                overflow: hidden;
+                .dz-upload {
+                    display: block;
+                    background: #0855ff;
+                    height: 100%;
+                }
+            }
+            .dz-remove{
+                width: 21px;
+                height: 21px;
+                position: absolute;
+                z-index: 1;
+                right: 0;
+                top: 0;
+                cursor: pointer;
+                font-size: 0;
+                background: rgba(255,255,255,0.8);
+                border-radius: 100%;
+                &:after,
+                &:before{
+                    transition: all 0.15s ease;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    content: '';
+                    width: 10px;
+                    height: 1px;
+                    background: #EAEAEA;
+                    display: block;
+                    transform-origin: 50% 50%;
+                }
+                &:after{
+                    transform: translate(-50%, -50%) rotate(45deg);
+                }
+                &:before{
+                    transform: translate(-50%, -50%) rotate(-45deg);
+                }
+                &:hover{
+                    &:after,
+                    &:before{
+                        background: #000;
+                    }
+                }
+            }
+            &.dz-complete:not(.dz-success){
+                .statusRows{
+                    display: none;
+                }
+                .dz-details{
+                    .dz-filename {
+                        opacity: 1;
+                        font-size: 12px;
+                        line-height: 14px;
+                        span:before{
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+            &.dz-success{
+                .dz-details{
+                    .dz-filename {
+                        opacity: 1;
+                        font-size: 12px;
+                        line-height: 14px;
+                        span:before{
+                            opacity: 1;
+                        }
+                    }
+                }
+
+                .statusRows{
+                    transition: opacity 0.2s ease 2s;
+                    opacity: 0;
+                }
+                .dz-progress {
+                    //transition: opacity 0.2s ease 0.5s;
+                    opacity: 0;
+                }
+                .dz-success-mark {
+                    opacity: 1;
+                }
+            }
+        }
+
     }
 </style>

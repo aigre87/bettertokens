@@ -27,7 +27,6 @@ module.exports = async (app, api) => {
 	});
 
 	api.on('auth do', async (data, session) => {
-		console.log(1)
 		if (!session.auth || !session.auth.token) return null;
 
 		let result = false;
@@ -36,14 +35,11 @@ module.exports = async (app, api) => {
 		} catch (e) {
 			return false;
 		}
-		console.log(1111)
 		if (result) {
 			session.auth.address = sg.utils.crypto.buildRawAddress(await (new sg.Base58()).process(data.publicKey));
 		}
-		console.log(2)
 		session.auth.authed = result;
 		session.save();
-		console.log(3)
 		return result;
 	});
 
