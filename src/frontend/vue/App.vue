@@ -365,31 +365,6 @@
         color: #c7c7c7;
         text-align: left;
     }
-    .page-application .input-wrap{
-        .input-wrap-w{
-            position: relative;
-        }
-        .validateErrorText{
-            color: #D8000C;
-            position: absolute;
-            left: 8px;
-            bottom: 1px;
-            padding: 0 5px;
-            font-size: 14px;
-            line-height: 16px;
-            background: #fff;
-            transform: translateY(50%);
-            opacity: 0;
-        }
-        &.validateError{
-            .form-input {
-                border: 1px solid #D8000C;
-            }
-            .validateErrorText{
-                opacity: 1;
-            }
-        }
-    }
     .page-application{
         #dropzone{
             display: flex;

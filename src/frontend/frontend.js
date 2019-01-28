@@ -37,11 +37,43 @@ $(document).ready(() => {
 	} else {
 		$('.cookies').remove();
 	}
+
 	$('#partnerBtn').click(() => {
-		let modal = jQuery('[data-remodal-id=modal]').remodal();
+		jQuery('[data-remodal-id=modal]').remodal();
 	});
-	$('#modalSend').click(() => {
-		alert('Your application has been successfully submitted.');
+
+	$('#partnerSend').on('submit', function(e){
+		var partnersFormModal = $('[data-remodal-id=modal]').remodal();
+		let form = $(this),
+			reqInp = form.find("input.required"),
+			errFlag = false;
+
+		reqInp.each(function(){
+			if( $(this).val().trim().length < 1 ){
+				$(this).addClass("validateError");
+				errFlag = true;
+			}else{
+				$(this).removeClass("validateError");
+			}
+		});
+		if( errFlag ) {
+			e.preventDefault();
+			return false;
+		}
+		else{
+			e.preventDefault();
+			$.ajax({
+				type: "POST",
+				url: form.attr("action"),
+				data: form.serialize(), // serializes the form's elements.
+				success: function(data){ // show response from the php script.
+					partnersFormModal.close();
+					let modal = jQuery('[data-remodal-id=partnerSendSuccess]').remodal();
+					modal.open();
+					form[0].reset();
+				}
+			});
+		}
 	});
 
 	app.map.init();

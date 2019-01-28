@@ -1,3 +1,5 @@
+const nodemailer = require("nodemailer");
+
 module.exports = async (app) => {
 	const upload = require('multer')({
 		dest  : 'storage/',
@@ -15,13 +17,13 @@ module.exports = async (app) => {
 		console.log(req.body);
 		res.redirect('/');
 		let mailTpl = `
-<h3>New partner apply</h3>
-<p><ul>
-<li><b>Company</b>: ${req.body.company}</li>
-<li><b>Name</b>: ${req.body.name}</li>
-<li><b>Site</b>: ${req.body.site}</li>
-<li><b>Email</b>: ${req.body.email}</li>
-</ul></p>				`;
+			<h3>New partner apply</h3>
+			<p><ul>
+			<li><b>Company</b>: ${req.body.company}</li>
+			<li><b>Name</b>: ${req.body.name}</li>
+			<li><b>Site</b>: ${req.body.site}</li>
+			<li><b>Email</b>: ${req.body.email}</li>
+			</ul></p>`;
 
 		let transporter = nodemailer.createTransport({
 			host  : 'smtp.wavesplatform.com',
@@ -32,7 +34,7 @@ module.exports = async (app) => {
 			}
 		});
 		let mailOptions = {
-			from   : '"bettertokens.org" <noreply@wavesplatform.com>', // sender address
+			from   : '"bettertokens.org" <noreply@wavesplatform.com>', // sender ƒaddressdress
 			to     : 'sec@bettertokens.org',
 			subject: 'New partner - ' + req.body.company,
 			html   : mailTpl
@@ -41,6 +43,13 @@ module.exports = async (app) => {
 		let mailRes = await new Promise(resolve => transporter.sendMail(mailOptions, (error, info) => resolve(error ? error : info)));
 		console.log(mailRes);
 		res.end('');
+
+		await app.db.models.partners.upsert({
+			company			: req.body.company,
+			name			: req.body.name,
+			site			: req.body.site,
+			email			: req.body.email
+		});
 	});
 
 	app.express.get('/apply/logout', (req, res) => {

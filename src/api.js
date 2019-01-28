@@ -70,15 +70,15 @@ module.exports = async (app, api) => {
 		if (!res) return;
 
 		let mailTpl = `<h3>${state} from ${owner}</h3><hr>
-<p><ul>
-<li><b>Email:</b> ${res.email}</li>
-<li><b>Link:</b> ${res.link}</li>
-<li><b>TokenID:</b> ${res.tokenId}</li>
-<li><b>Description:</b> ${res.description}</li>
-<li><b>Project name:</b> ${res.projectname}		
-<li><b>Address:</b> ${res.address}</li>
-<li><b>Ticker:</b> ${res.address}</li>
-<li><b>Files:</b><ul>`;
+			<p><ul>
+			<li><b>Email:</b> ${res.email}</li>
+			<li><b>Link:</b> ${res.link}</li>
+			<li><b>TokenID:</b> ${res.tokenId}</li>
+			<li><b>Description:</b> ${res.description}</li>
+			<li><b>Project name:</b> ${res.projectname}		
+			<li><b>Address:</b> ${res.address}</li>
+			<li><b>Ticker:</b> ${res.address}</li>
+			<li><b>Files:</b><ul>`;
 		app.tools.iterate(res.uploads, (file) => {
 			mailTpl += `<li><a href="https://bettertokens.org/apply/docs/${file.uid}">${file.fileName}</a></li>`;
 		});

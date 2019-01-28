@@ -86,7 +86,7 @@ body.index-page
 						li: img(src='/images/img03.png' width='134' height='26' alt='image description')
 						li: img(src='/images/img04.png' width='187' height='23' alt='image description')
 					.col-lg.col-xl-3
-						a.btn.btn-block.btn-outline-gray#partnerBtna(href='#modal') Become our partner
+						a.btn.btn-block.btn-outline-gray#partnerBtn(href='#modal') Become our partner
 			section.news-section
 				.block-title News &amp; Reports
 				.row
@@ -143,21 +143,30 @@ body.index-page
 							.report-name Security Token Offerings
 							a.btn.btn-outline-white(href='/pdf/TSA_Report.pdf') Read
 	#modal-partner-dlg.modal-item.remodal(data-remodal-id="modal")
-		form(method='post' action='/partner/send')
+		form#partnerSend(method='post' action='/partner/send')
 			.modal-title Become our partner
 			.input-wrap
 				label.control-label-block Company
-				input.form-input.required(name='company' type='text' placeholder='Company name')
+				.input-wrap-w
+					input.form-input.required(name='company' type='text' placeholder='Company name')
+					span.validateErrorText Please enter company
 			.input-wrap
 				label.control-label-block Company representative
-				input.form-input.required(name='name' type='text' placeholder='First name, Last name')
+				.input-wrap-w
+					input.form-input.required(name='name' type='text' placeholder='First name, Last name')
+					span.validateErrorText Please enter name
 			.input-wrap
 				label.control-label-block Company web site
-				input.form-input.required(name='site' type='text' placeholder='https://sitename.sample/')
+				.input-wrap-w
+					input.form-input.required(name='site' type='text' placeholder='https://sitename.sample/')
+					span.validateErrorText Please enter site
 			.input-wrap
 				label.control-label-block Contact email
-				input.form-input.email(name='email' type='email' placeholder='email@sample.com')
+				.input-wrap-w
+					input.form-input.email.required(name='email' type='email' placeholder='email@sample.com')
+					span.validateErrorText Please enter email
 			.row
 				.col-6: button.btn.btn-block.btn-gray.remodal-cancel(type='reset' data-remodal-action="cancel") CANCEL
 				.col-6: button.btn.btn-block#modalSend(type='submit') JOIN US
+	div(data-remodal-id="partnerSendSuccess") Your application has been successfully submitted.
 	include includes/footer

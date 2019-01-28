@@ -24,7 +24,13 @@ module.exports = async (app) => {
 				fileName: 'string',
 				size    : 'integer',
 				mimeType: 'string'
-			}
+			},
+		},
+		partners: {
+			company			: 'string',
+			name			: 'string',
+			site			: 'string',
+			email			: 'string'
 		}
 	});
 
